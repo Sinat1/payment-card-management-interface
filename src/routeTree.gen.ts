@@ -11,9 +11,16 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as MyCardsImport } from './routes/my-cards'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const MyCardsRoute = MyCardsImport.update({
+  id: '/my-cards',
+  path: '/my-cards',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -32,6 +39,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/my-cards': {
+      id: '/my-cards'
+      path: '/my-cards'
+      fullPath: '/my-cards'
+      preLoaderRoute: typeof MyCardsImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -39,32 +53,37 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/my-cards': typeof MyCardsRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/my-cards': typeof MyCardsRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/my-cards': typeof MyCardsRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/my-cards'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/my-cards'
+  id: '__root__' | '/' | '/my-cards'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MyCardsRoute: typeof MyCardsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MyCardsRoute: MyCardsRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +96,15 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.ts",
       "children": [
-        "/"
+        "/",
+        "/my-cards"
       ]
     },
     "/": {
       "filePath": "index.ts"
+    },
+    "/my-cards": {
+      "filePath": "my-cards.tsx"
     }
   }
 }
