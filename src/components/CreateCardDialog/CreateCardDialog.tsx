@@ -9,14 +9,28 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useState, type JSX } from "react";
 import type { Card } from "@/types/card";
 
 type Props = {
 	setCards: React.Dispatch<React.SetStateAction<Card[]>>;
 };
 
-const CreateCardDialog = ({ setCards }: Props) => {
+function getBrandFromNumber(number: string): Card["brand"] {
+	const firstDigit = number[0];
+	switch (firstDigit) {
+		case "4":
+			return "visa";
+		case "5":
+			return "mastercard";
+		case "3":
+			return "amex";
+		default:
+			return "noname";
+	}
+}
+
+const CreateCardDialog = ({ setCards }: Props): JSX.Element => {
 	const [open, setOpen] = useState(false);
 	const [cardNumber, setCardNumber] = useState("");
 	const [expiration, setExpiration] = useState("");
@@ -75,23 +89,23 @@ const CreateCardDialog = ({ setCards }: Props) => {
 						Enter card information below.
 					</DialogDescription>
 				</DialogHeader>
-				<form onSubmit={handleSubmit} className="space-y-4">
+				<form className="space-y-4" onSubmit={handleSubmit}>
 					{/* Card Number */}
 					<div className="relative">
 						<Input
-							type="tel"
-							placeholder="Card Number"
-							value={cardNumber}
-							onChange={(e) => setCardNumber(e.target.value.replace(/\D/g, ""))}
 							required
-							// pattern="\d{16}"
 							maxLength={16}
+							placeholder="Card Number"
+							type="tel"
+							value={cardNumber}
+							// pattern="\d{16}"
+							onChange={(e) => setCardNumber(e.target.value.replace(/\D/g, ""))}
 						/>
 						{cardNumber && (
 							<img
-								src={`/brands/${getBrandFromNumber(cardNumber).toLowerCase()}.png`}
 								alt="brand"
 								className="absolute right-1 -top-1.5 w-[80px] h-[50px] object-contain"
+								src={`/brands/${getBrandFromNumber(cardNumber).toLowerCase()}.png`}
 							/>
 						)}
 					</div>
@@ -109,9 +123,9 @@ const CreateCardDialog = ({ setCards }: Props) => {
 
 					{/* CVC */}
 					<Input
-						type="password"
 						inputMode="numeric"
 						placeholder="CVC"
+						type="password"
 						value={cvc}
 						onChange={(e) => setCvc(e.target.value.replace(/\D/g, ""))}
 						required
@@ -131,8 +145,8 @@ const CreateCardDialog = ({ setCards }: Props) => {
 					</label>
 
 					<Button
-						type="submit"
 						className="w-full cursor-pointer  hover:bg-green-700 transition duration-250 ease-in-out"
+						type="submit"
 					>
 						Save Card
 					</Button>
@@ -141,19 +155,5 @@ const CreateCardDialog = ({ setCards }: Props) => {
 		</Dialog>
 	);
 };
-
-function getBrandFromNumber(number: string): string {
-	const firstDigit = number[0];
-	switch (firstDigit) {
-		case "4":
-			return "Visa";
-		case "5":
-			return "Mastercard";
-		case "3":
-			return "Amex";
-		default:
-			return "NoName";
-	}
-}
 
 export default CreateCardDialog;

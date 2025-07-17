@@ -1,4 +1,4 @@
-export type CardBrand = 'visa' | 'mastercard' | 'amex';
+export type CardBrand = 'visa' | 'mastercard' | 'amex' | 'noname';
 
 export interface Card {
     id: string;
